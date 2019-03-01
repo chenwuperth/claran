@@ -39,10 +39,17 @@ class COCODetection(object):
         annotation_file = os.path.join(
             basedir, 'annotations/instances_{}.json'.format(name))
         assert os.path.isfile(annotation_file), annotation_file
-
+        self.update_class_and_cat(annotation_file)
         from pycocotools.coco import COCO
         self.coco = COCO(annotation_file)
         logger.info("Instances loaded from {}.".format(annotation_file))
+
+    def update_class_and_cat(self, annotation_file):
+        with open(annotation_file, 'r') as fin:
+            anno = json.load(fin)
+        catlist = anno['annotations']
+        self.class_names = [x['name'] for x in catlist]
+        self.COCO_id_to_category_id = {x['id']: x['id'] for x in catlist}
 
     # https://github.com/cocodataset/cocoapi/blob/master/PythonAPI/pycocoEvalDemo.ipynb
     def print_coco_metrics(self, json_file):
