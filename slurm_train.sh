@@ -10,8 +10,8 @@ module load tensorflow/1.12.0-py36-gpu
 module load nccl
 module load openmpi
 
-export PYTHONPATH=$PYTHONPATH:/flush1/wu082/venvs/claran_env
-
+export PYTHONPATH=$PYTHONPATH:/flush1/wu082/proj/claran/pyenv
+#source /flush1/wu082/venvs/claran_env/bin/activate
 cd /flush1/wu082/proj/claran
 mpirun -np 1 python train.py --config \
         MODE_MASK=False MODE_FPN=True \

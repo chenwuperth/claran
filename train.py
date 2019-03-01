@@ -34,11 +34,12 @@ from model_mrcnn import maskrcnn_loss, maskrcnn_upXconv_head
 from model_rpn import generate_rpn_proposals, rpn_head, rpn_losses
 from viz import draw_annotation, draw_final_outputs, draw_predictions, draw_proposal_recall
 
+"""
 try:
     import horovod.tensorflow as hvd
 except ImportError:
     pass
-
+"""
 
 class DetectionModel(ModelDesc):
     def preprocess(self, image):

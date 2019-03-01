@@ -24,11 +24,12 @@ from data import get_eval_dataflow
 from dataset import DetectionDataset
 from config import config as cfg
 
+"""
 try:
     import horovod.tensorflow as hvd
 except ImportError:
     pass
-
+"""
 
 DetectionResult = namedtuple(
     'DetectionResult',

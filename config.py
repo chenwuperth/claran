@@ -245,7 +245,7 @@ def finalize_configs(is_training):
 
     if is_training:
         train_scales = _C.PREPROC.TRAIN_SHORT_EDGE_SIZE
-        if isinstance(train_scales, (list, tuple)) and train_scales[1] - train_scales[0] > 100:
+        if isinstance(train_scales, (list, tuple)) and int(train_scales[1]) - int(train_scales[0]) > 100:
             # don't autotune if augmentation is on
             os.environ['TF_CUDNN_USE_AUTOTUNE'] = '0'
         os.environ['TF_AUTOTUNE_THRESHOLD'] = '1'
@@ -260,7 +260,7 @@ def finalize_configs(is_training):
                 logger.warn("It's not recommended to use horovod for single-machine training. "
                             "Replicated trainer is more stable and has the same efficiency.")
         else:
-            assert 'OMPI_COMM_WORLD_SIZE' not in os.environ
+            #assert 'OMPI_COMM_WORLD_SIZE' not in os.environ
             ngpu = get_num_gpu()
         assert ngpu % 8 == 0 or 8 % ngpu == 0, "Can only train with 1,2,4 or >=8 GPUs, but found {} GPUs".format(ngpu)
     else:
