@@ -47,7 +47,7 @@ class COCODetection(object):
     def update_class_and_cat(self, annotation_file):
         with open(annotation_file, 'r') as fin:
             anno = json.load(fin)
-        catlist = anno['annotations']
+        catlist = anno['categories']
         self.class_names = [x['name'] for x in catlist]
         self.COCO_id_to_category_id = {x['id']: x['id'] for x in catlist}
 
