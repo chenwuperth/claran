@@ -54,10 +54,14 @@ class AttrDict():
 
             oldv = getattr(dic, key)
             if not isinstance(oldv, str):
-                if isinstance(oldv, list):
+                if isinstance(oldv, list) or isinstance(oldv, tuple):
                     v = v.split(',')
-                elif isinstance(oldv, tuple):
-                    v = tuple(v.split(','))
+                    if (isinstance(oldv[0], int)):
+                        v = [int(x) for x in v]
+                    elif (isinstance(oldv[0], float)):
+                        v = [float(x) for x in v]
+                    if isinstance(oldv, tuple):
+                        v = tuple(v)
                 else:
                     v = eval(v)
             setattr(dic, key, v)
@@ -245,7 +249,7 @@ def finalize_configs(is_training):
 
     if is_training:
         train_scales = _C.PREPROC.TRAIN_SHORT_EDGE_SIZE
-        if isinstance(train_scales, (list, tuple)) and int(train_scales[1]) - int(train_scales[0]) > 100:
+        if isinstance(train_scales, (list, tuple)) and (train_scales[1] - train_scales[0]) > 100:
             # don't autotune if augmentation is on
             os.environ['TF_CUDNN_USE_AUTOTUNE'] = '0'
         os.environ['TF_AUTOTUNE_THRESHOLD'] = '1'
