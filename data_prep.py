@@ -96,7 +96,7 @@ def xml2coco(img_list_file, in_img_dir, xml_dir, out_img_dir, json_dir):
 
 if __name__ == '__main__':
     img_list_file = '/Users/chen/gitrepos/ml/' +\
-                    'rgz_rcnn/data/RGZdevkit2017/RGZ2017/ImageSets/Main/testD1.txt'
+                    'rgz_rcnn/data/RGZdevkit2017/RGZ2017/ImageSets/Main/trainD1.txt'
     in_img_dir = None
     xml_dir = '/Users/chen/gitrepos/ml/rgz_rcnn/data/RGZdevkit2017/RGZ2017/Annotations'
     out_img_dir = None

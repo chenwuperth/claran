@@ -2,10 +2,10 @@ import tensorflow as tf
 
 from tensorpack.tfutils import get_current_tower_context
 
-from .config import config as cfg
-from .model_box import clip_boxes
-from .model_frcnn import BoxProposals, FastRCNNHead, fastrcnn_outputs
-from .utils.box_ops import pairwise_iou
+from config import config as cfg
+from model_box import clip_boxes
+from model_frcnn import BoxProposals, FastRCNNHead, fastrcnn_outputs
+from utils.box_ops import pairwise_iou
 
 
 class CascadeRCNNHead(object):

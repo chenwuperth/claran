@@ -54,7 +54,12 @@ class AttrDict():
 
             oldv = getattr(dic, key)
             if not isinstance(oldv, str):
-                v = eval(v)
+                if isinstance(oldv, list):
+                    v = v.split(',')
+                elif isinstance(oldv, tuple):
+                    v = tuple(v.split(','))
+                else:
+                    v = eval(v)
             setattr(dic, key, v)
 
     def freeze(self, freezed=True):

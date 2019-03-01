@@ -16,9 +16,9 @@ from common import (
     CustomResize, DataFromListOfDict, box_to_point8,
     filter_boxes_inside_shape, point8_to_box, segmentation_to_mask, np_iou)
 from config import config as cfg
-from .dataset import DetectionDataset
-from .utils.generate_anchors import generate_anchors
-from .utils.np_box_ops import area as np_area, ioa as np_ioa
+from dataset import DetectionDataset
+from utils.generate_anchors import generate_anchors
+from utils.np_box_ops import area as np_area, ioa as np_ioa
 
 # import tensorpack.utils.viz as tpviz
 
