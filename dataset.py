@@ -48,8 +48,8 @@ class COCODetection(object):
         with open(annotation_file, 'r') as fin:
             anno = json.load(fin)
         catlist = anno['categories']
-        self.class_names = [x['name'] for x in catlist]
-        self.COCO_id_to_category_id = {x['id']: x['id'] for x in catlist}
+        COCODetection.class_names = [x['name'] for x in catlist]
+        COCODetection.COCO_id_to_category_id = {x['id']: x['id'] for x in catlist}
 
     # https://github.com/cocodataset/cocoapi/blob/master/PythonAPI/pycocoEvalDemo.ipynb
     def print_coco_metrics(self, json_file):
@@ -201,9 +201,12 @@ class DetectionDataset(object):
         This function is responsible for setting the dataset-specific
         attributes in both cfg and self.
         """
-        self.num_category = cfg.DATA.NUM_CATEGORY = len(COCODetection.class_names)
+        self_class_names = ['1C_1P', '1C_2P', '1C_3P', '2C_2P', '2C_3P', '3C_3P']
+        self.COCO_id_to_category_id = {x + 1: x + 1 for x, _ in enumerate(self_class_names)}
+
+        self.num_category = cfg.DATA.NUM_CATEGORY = len(self_class_names)
         self.num_classes = self.num_category + 1
-        self.class_names = cfg.DATA.CLASS_NAMES = ["BG"] + COCODetection.class_names
+        self.class_names = cfg.DATA.CLASS_NAMES = ["BG"] + self_class_names
 
     def load_training_roidbs(self, names):
         """
@@ -268,7 +271,7 @@ class DetectionDataset(object):
         Returns:
             dict: the evaluation results.
         """
-        continuous_id_to_COCO_id = {v: k for k, v in COCODetection.COCO_id_to_category_id.items()}
+        continuous_id_to_COCO_id = {v: k for k, v in self.COCO_id_to_category_id.items()}
         for res in results:
             # convert to COCO's incontinuous category id
             res['category_id'] = continuous_id_to_COCO_id[res['category_id']]
