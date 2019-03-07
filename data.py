@@ -326,7 +326,7 @@ def get_train_dataflow(rotate=False):
         points = box_to_point8(boxes)
         points = aug.augment_coords(points, params)
         if (rotate and len(points) == 0): # 
-            logger.info('None boxes are left after rotating img %s. Giving up rotation!' % fname)
+            logger.warn('No bboxes after rotating %s. Cancel rotation!' % fname)
             aug2 = imgaug.AugmentorList(aug_list[:-1])
             im = cv2.imread(fname, cv2.IMREAD_COLOR).astype('float32')
             im, params = aug2.augment_return_params(im)
