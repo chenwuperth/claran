@@ -8,13 +8,13 @@ from tabulate import tabulate
 from termcolor import colored
 
 from tensorpack.dataflow import (
-    DataFromList, MapDataComponent, MultiProcessMapDataZMQ, MultiThreadMapData, TestDataSpeed, imgaug)
+    DataFromList, MapDataComponent, MultiProcessMapDataZMQ, MultiThreadMapData, TestDataSpeed, imgaug, DataFromGenerator)
 from tensorpack.utils import logger
 from tensorpack.utils.argtools import log_once, memoized
 
 from common import (
     CustomResize, DataFromListOfDict, box_to_point8,
-    filter_boxes_inside_shape, point8_to_box, segmentation_to_mask, np_iou)
+    filter_boxes_inside_shape, point8_to_box, segmentation_to_mask, np_iou, RotateImg)
 from config import config as cfg
 from dataset import DetectionDataset
 from utils.generate_anchors import generate_anchors
@@ -267,7 +267,7 @@ def get_multilevel_rpn_anchor_input(im, boxes, is_crowd):
     return multilevel_inputs
 
 
-def get_train_dataflow():
+def get_train_dataflow(rotate=False):
     """
     Return a training dataflow. Each datapoint consists of the following:
 
@@ -292,12 +292,25 @@ def get_train_dataflow():
     roidbs = list(filter(lambda img: len(img['boxes'][img['is_crowd'] == 0]) > 0, roidbs))
     logger.info("Filtered {} images which contain no non-crowd groudtruth boxes. Total #images for training: {}".format(
         num - len(roidbs), len(roidbs)))
+    aug_list = [CustomResize(cfg.PREPROC.TRAIN_SHORT_EDGE_SIZE, cfg.PREPROC.MAX_SIZE),
+         imgaug.Flip(horiz=True)]
+    if (rotate):
+        # define a generator
+        def next_img():
+            # shuffle the list first
+            from random import shuffle
+            shuffle(roidbs)
+            idx = 0
+            while (1):
+                yield roidbs[idx % num]
+                idx += 1
+        ds = DataFromGenerator(next_img)
+        aug_list.append(RotateImg())
+    else:
+        #TODO move this line to almost the end
+        ds = DataFromList(roidbs, shuffle=True)
 
-    ds = DataFromList(roidbs, shuffle=True)
-
-    aug = imgaug.AugmentorList(
-        [CustomResize(cfg.PREPROC.TRAIN_SHORT_EDGE_SIZE, cfg.PREPROC.MAX_SIZE),
-         imgaug.Flip(horiz=True)])
+    aug = imgaug.AugmentorList(aug_list)
 
     def preprocess(roidb):
         fname, boxes, klass, is_crowd = roidb['file_name'], roidb['boxes'], roidb['class'], roidb['is_crowd']
@@ -312,6 +325,13 @@ def get_train_dataflow():
         im, params = aug.augment_return_params(im)
         points = box_to_point8(boxes)
         points = aug.augment_coords(points, params)
+        if (rotate and len(points) == 0): # 
+            logger.info('None boxes are left after rotating img %s. Giving up rotation!' % fname)
+            aug2 = imgaug.AugmentorList(aug_list[:-1])
+            im = cv2.imread(fname, cv2.IMREAD_COLOR).astype('float32')
+            im, params = aug2.augment_return_params(im)
+            points = box_to_point8(boxes)
+            points = aug2.augment_coords(points, params)
         boxes = point8_to_box(points)
         assert np.min(np_area(boxes)) > 0, "Some boxes have zero area!"
 
