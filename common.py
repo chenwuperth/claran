@@ -285,7 +285,10 @@ class RotateImg(ImageAugmentor):
             format `x1 y1 x2 y2` 
 
         """
-        ar_ = (bbox_area(bbox))
+        def bbox_area(bbox):
+            return (bbox[:, 2] - bbox[:, 0]) * (bbox[:, 3] - bbox[:, 1])
+
+        ar_ = (bbox_area(bbox)) # could this be zero?
         x_min = np.maximum(bbox[:, 0], clip_box[0]).reshape(-1, 1)
         y_min = np.maximum(bbox[:, 1], clip_box[1]).reshape(-1, 1)
         x_max = np.minimum(bbox[:, 2], clip_box[2]).reshape(-1, 1)
@@ -293,7 +296,7 @@ class RotateImg(ImageAugmentor):
 
         bbox = np.hstack((x_min, y_min, x_max, y_max, bbox[:, 4:]))
 
-        delta_area = ((ar_ - bbox_area(bbox))/ar_)
+        delta_area = ((ar_ - bbox_area(bbox)) / ar_)
 
         mask = (delta_area < (1 - alpha)).astype(int)
 
