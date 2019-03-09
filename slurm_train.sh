@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --nodes=1
-#SBATCH --time=12:00:00
+#SBATCH --time=16:00:00
 #SBATCH --ntasks-per-node=1
 #SBATCH --gres=gpu:4
 #SBATCH --mem=8g
@@ -21,4 +21,4 @@ mpirun -np 1 python train.py --logdir $LOG_DIR --config \
         DATA.TRAIN=trainD1 DATA.VAL=testD1 \
         PREPROC.TRAIN_SHORT_EDGE_SIZE=600,600 \
         PREPROC.TEST_SHORT_EDGE_SIZE=600 \
-	TRAIN.LR_SCHEDULE=200,300,400
+	TRAIN.LR_SCHEDULE=20000,30000,40000

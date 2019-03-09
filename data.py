@@ -267,7 +267,7 @@ def get_multilevel_rpn_anchor_input(im, boxes, is_crowd):
     return multilevel_inputs
 
 
-def get_train_dataflow(rotate=False):
+def get_train_dataflow(rotate=True):
     """
     Return a training dataflow. Each datapoint consists of the following:
 
