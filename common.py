@@ -61,6 +61,8 @@ class RotateImg(ImageAugmentor):
         return ret
 
     def _augment_coords(self, coords, param):
+        #TODO should we tell the difference between masks and boxes?
+        #TODO perhaps no if we also let the mask's polygon the same as the box!
         do, cy, cx, angle, h, w = param
         if do:
             bboxes = point8_to_box(coords)
@@ -345,9 +347,16 @@ def box_to_point8(boxes):
     """
     Args:
         boxes: nx4
+        i.e.
+        x1, y1, x2, y2
 
     Returns:
         (nx4)x2
+        i.e.
+            x1, y1
+            x2, y2
+            x1, y2
+            x2, y1
     """
     b = boxes[:, [0, 1, 2, 3, 0, 3, 2, 1]]
     b = b.reshape((-1, 2))
