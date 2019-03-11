@@ -352,7 +352,7 @@ def box_to_point8(boxes):
 
     Returns:
         (nx4)x2
-        i.e.
+        i.e. (when n = 1)
             x1, y1
             x2, y2
             x1, y2

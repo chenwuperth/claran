@@ -191,7 +191,7 @@ def db2coco(db_path, img_list_file, fits_dir, json_dir):
 
 if __name__ == '__main__':
     img_list_file = '/Users/chen/gitrepos/ml/' +\
-                    'rgz_rcnn/data/RGZdevkit2017/RGZ2017/ImageSets/Main/testD3.txt'
+                    'rgz_rcnn/data/RGZdevkit2017/RGZ2017/ImageSets/Main/testD1.txt'
     in_img_dir = None
     xml_dir = '/Users/chen/gitrepos/ml/rgz_rcnn/data/RGZdevkit2017/RGZ2017/Annotations'
     out_img_dir = None

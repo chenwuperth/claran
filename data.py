@@ -367,7 +367,11 @@ def get_train_dataflow(rotate=True):
             # And produce one image-sized binary mask per box.
             masks = []
             for polys in segmentation:
-                polys = [aug.augment_coords(p, params) for p in polys]
+                # we assume segmentation is ALWAYS a box here!
+                poly_arr = np.array(polys, dtype=np.float)
+                poly_arr = np.reshape(poly_arr, [-1, 2])
+                polys = [aug.augment_coords(poly_arr, params)]
+                #polys = [aug.augment_coords(p, params) for p in polys]
                 masks.append(segmentation_to_mask(polys, im.shape[0], im.shape[1]))
             masks = np.asarray(masks, dtype='uint8')    # values in {0, 1}
             ret['gt_masks'] = masks
