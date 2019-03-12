@@ -370,8 +370,8 @@ def get_train_dataflow(rotate=True):
                 # each polys is one object instance
                 # each polys is a list of polygons
                 # each ploygon is a [-1, 2] array
-                polys = [aug.augment_coords(polys[0], params)]
-                #polys = [aug.augment_coords(p, params) for p in polys]
+                #polys = [aug.augment_coords(polys[0], params)]
+                polys = [aug.augment_coords(p, params) for p in polys]
                 masks.append(segmentation_to_mask(polys, im.shape[0], im.shape[1]))
             masks = np.asarray(masks, dtype='uint8')    # values in {0, 1}
             ret['gt_masks'] = masks
