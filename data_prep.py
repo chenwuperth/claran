@@ -3,10 +3,14 @@ import os.path as osp
 import json
 import xml.etree.ElementTree as ET
 
+from random import sample
+
 import sqlite3 as dbdrv
 
 from astropy.io import fits
 from astropy import wcs
+
+from utils.viz_result import show_n_save_img
 
 """
 Prepare RGZ data into the COCO format based on
@@ -189,6 +193,38 @@ def db2coco(db_path, img_list_file, fits_dir, json_dir):
     with open(json_dump, 'w') as fout:
         json.dump(anno, fout)
 
+def check_hg(json_file, num_viz=50):
+    """
+    randomly check the correctness of the gt host galaxy position
+    """
+    from dataset import COCODetection
+    cocod = COCODetection('data', 'trainD3_hg')
+    with open(json_file, 'r') as fin:
+        anno = json.load(fin)
+    images = anno['images']
+    images = sample(images, num_viz)
+    for image in images:
+        png_file = osp.join(cocod._imgdir, image['file_name'])
+        objs = cocod.coco.imgToAnns[image['id']]
+        boxes = []
+        segs = []
+        classes = []
+        for objid, obj in enumerate(objs):
+            if obj.get('ignore', 0) == 1:
+                continue
+            x1, y1, w, h = obj['bbox']
+            x2 = x1 + w
+            y2 = y1 + h
+            boxes.append((x1, y1, x2, y2))
+            points8 = obj['segmentation'][0]
+            # [[hx1, hy1, hx2, hy1, hx2, hy2, hx1, hy2]]
+            xs1, ys1, xs2, ys2 = points8[0], points8[1], points8[4], points8[5]
+            segs.append((xs1, ys1, xs2, ys2))
+            classes.append(obj['category_id'])
+        out_fn = osp.join('/tmp', image['file_name'])
+        show_n_save_img(png_file, boxes, segs, out_fn, classes, 
+                        image['height'], image['width'])
+
 if __name__ == '__main__':
     img_list_file = '/Users/chen/gitrepos/ml/' +\
                     'rgz_rcnn/data/RGZdevkit2017/RGZ2017/ImageSets/Main/testD1.txt'
@@ -199,7 +235,9 @@ if __name__ == '__main__':
     #xml2coco(img_list_file, in_img_dir, xml_dir, out_img_dir, json_dir)
     db_path = '/Users/chen/gitrepos/ml/rgz-ml/data/rgz_image_set.sqlite3'
     fits_dir = '/Users/chen/gitrepos/ml/rgz_rcnn/data/RGZdevkit2017/RGZ2017/FITSImages'
-    db2coco(db_path, img_list_file, fits_dir, json_dir)
+    #db2coco(db_path, img_list_file, fits_dir, json_dir)
+    json_file = 'data/annotations/instances_trainD3_hg.json'
+    check_hg(json_file)
 
 
         
