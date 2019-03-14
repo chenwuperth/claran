@@ -292,6 +292,7 @@ def get_train_dataflow(rotate=True):
     roidbs = list(filter(lambda img: len(img['boxes'][img['is_crowd'] == 0]) > 0, roidbs))
     logger.info("Filtered {} images which contain no non-crowd groudtruth boxes. Total #images for training: {}".format(
         num - len(roidbs), len(roidbs)))
+    num = len(roidbs)
     aug_list = [CustomResize(cfg.PREPROC.TRAIN_SHORT_EDGE_SIZE, cfg.PREPROC.MAX_SIZE),
          imgaug.Flip(horiz=True)]
     if (rotate):
