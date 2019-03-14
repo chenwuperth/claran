@@ -397,6 +397,31 @@ def do_predict(pred_func, input_file):
     logger.info("Inference output written to output.png")
     tpviz.interactive_imshow(viz)
 
+def do_predict_batch(pred_func, input_dir, rankinfo=None):
+    file_nms = os.listdir(input_dir)
+    if (rankinfo is not None):
+        rankinfo = rankinfo.split(':')
+        myrank = int(rankinfo[0]) - 1 #slurm array job id starting from 1?
+        total_proc = int(rankinfo[1])
+        slurm_id = int(rankinfo[2])
+        file_nms = file_nms[myrank:][::total_proc]
+    
+    tags = []
+    for fn in file_nms:
+        if not fn.endswith('.png'):
+            continue
+        input_file = os.path.join(input_dir, fn)
+        img = cv2.imread(input_file, cv2.IMREAD_COLOR)
+        results = predict_image(img, pred_func)
+        
+        for r in results:
+            box_str = '{}-{}-{}-{}'.format(*list(r.box))
+            tags.append(
+                "{},{},{:.2f},{}".format(fn, cfg.DATA.CLASS_NAMES[r.class_id], r.score, box_str))
+
+    with open('%d_%d.result' % (slurm_id, myrank + 1), 'w') as fou:
+        fc = os.linesep.join(tags)
+        fou.write(fc)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -409,6 +434,9 @@ if __name__ == '__main__':
                                           "This argument is the path to the input image file")
     parser.add_argument('--config', help="A list of KEY=VALUE to overwrite those defined in config.py",
                         nargs='+')
+    parser.add_argument('--batchpred', help="Run prediction for all images in a given path "
+                                          "This argument is the path to the input image directory")
+    parser.add_argument('--rankinfo',  help='process rank and total number of processes and slurm job id', default=None)
 
     if get_tf_version_tuple() < (1, 6):
         # https://github.com/tensorflow/tensorflow/issues/14657
@@ -421,7 +449,7 @@ if __name__ == '__main__':
     MODEL = ResNetFPNModel() if cfg.MODE_FPN else ResNetC4Model()
     DetectionDataset()  # initialize the config with information from our dataset
 
-    if args.visualize or args.evaluate or args.predict:
+    if args.visualize or args.evaluate or args.predict or args.batchpred:
         if not tf.test.is_gpu_available():
             from tensorflow.python.framework import test_util
             assert test_util.IsMklEnabled(), "Inference requires either GPU support or MKL support!"
@@ -441,6 +469,8 @@ if __name__ == '__main__':
                 output_names=MODEL.get_inference_tensor_names()[1])
             if args.predict:
                 do_predict(OfflinePredictor(predcfg), args.predict)
+            elif args.batchpred:
+                do_predict_batch(OfflinePredictor(predcfg), args.batchpred, args.rankinfo)
             elif args.evaluate:
                 assert args.evaluate.endswith('.json'), args.evaluate
                 do_evaluate(predcfg, args.evaluate)
