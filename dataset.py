@@ -202,6 +202,7 @@ class DetectionDataset(object):
         attributes in both cfg and self.
         """
         self_class_names = ['1C_1P', '1C_2P', '1C_3P', '2C_2P', '2C_3P', '3C_3P']
+        #self_class_names = ['1S_1C', '2S_1C', '2S_2C', '2S_3C', '3S_3C']
         self.COCO_id_to_category_id = {x + 1: x + 1 for x, _ in enumerate(self_class_names)}
 
         self.num_category = cfg.DATA.NUM_CATEGORY = len(self_class_names)

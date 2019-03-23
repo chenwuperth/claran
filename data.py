@@ -305,6 +305,8 @@ def get_train_dataflow(rotate=True):
             while (1):
                 yield roidbs[idx % num]
                 idx += 1
+                if (idx % num == 0):
+                    shuffle(roidbs) # shuffle again during each epoch
         ds = DataFromGenerator(next_img)
         aug_list.append(RotateImg())
     else:
