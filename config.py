@@ -96,7 +96,7 @@ _C.DATA.TRAIN = ['train2014', 'valminusminival2014']   # i.e. trainval35k, AKA t
 _C.DATA.VAL = ('minival2014', )  # AKA val2017
 # This two config will be populated later by the dataset loader:
 _C.DATA.NUM_CATEGORY = 0  # without the background class (e.g., 80 for COCO)
-_C.DATA.CLASS_NAMES = []  # NUM_CLASS (NUM_CATEGORY+1) strings, the first is "BG".
+_C.DATA.CLASS_NAMES = ['']  # NUM_CLASS (NUM_CATEGORY+1) strings, the first is "BG".
 
 # basemodel ----------------------
 _C.BACKBONE.WEIGHTS = ''   # /path/to/weights.npz
