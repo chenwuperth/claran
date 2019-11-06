@@ -2,11 +2,11 @@
 [ClaRAN - Classifying Radio Galaxies Automatically with Neural Networks](https://academic.oup.com/mnras/article/482/1/1211/5142869)
 
 # Faster R-CNN / Mask R-CNN on Radio Galaxy Zoo
-As an upgrade of the [ClaRAN v0.1](https://github.com/chenwuperth/rgz_rcnn), ClaRAN v0.2 is completely re-written based on the awesome [Tensorpack](https://github.com/tensorpack/tensorpack) project, which is likely the best-performing open source TensorFlow reimplementation of [Faster R-CNN](https://arxiv.org/abs/1506.01497) used in ClaRAN v0.1. Moreover, [Tensorpack](https://github.com/tensorpack/tensorpack) has integrated the [Feature Pyramid Networks for Object Detection](https://arxiv.org/abs/1612.03144) (FPN). It also supports instance segmentation based on [Mask R-CNN](https://arxiv.org/abs/1703.06870), although ClaRAN v0.2 currently does not support source segmentation.
+As an upgrade of the [ClaRAN v0.1](https://github.com/chenwuperth/rgz_rcnn), ClaRAN v0.2 is based on the awesome [Tensorpack](https://github.com/tensorpack/tensorpack) project, which is likely the best-performing open source TensorFlow reimplementation of [Faster R-CNN](https://arxiv.org/abs/1506.01497). Moreover, [Tensorpack](https://github.com/tensorpack/tensorpack) has integrated the [Feature Pyramid Networks for Object Detection](https://arxiv.org/abs/1612.03144) (FPN). It also supports instance segmentation based on [Mask R-CNN](https://arxiv.org/abs/1703.06870), although ClaRAN v0.2 currently does not support source segmentation.
 
 In summary, ClaRAN v0.2 includes the following new features:
 + The default "backbone" network is now ResNet50.
-+ FPN for feature extraction
++ By default, FPN is used for multi-scale feature extraction
 + We further extended the image augmentation pipeline to support rotations (of both images and bounding boxes of sources) "on the fly"
 
 With the above changes, ClaRAN has achieved an mAP of **86.1%** for D3 (83% for v0.1) and **85.9%** for D1 (79% for v0.1). The D3 dataset overlays radio contours onto Infrared maps, whereas the D1 dataset contains radio maps only. 
