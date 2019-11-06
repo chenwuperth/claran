@@ -201,7 +201,11 @@ class DetectionDataset(object):
         This function is responsible for setting the dataset-specific
         attributes in both cfg and self.
         """
-        self_class_names = ['1C_1P', '1C_2P', '1C_3P', '2C_2P', '2C_3P', '3C_3P']
+        if '' == cfg.DATA.CLASS_NAMES[0]:
+            # if class names are not set, default back to RGZ classes
+            self_class_names = ['1C_1P', '1C_2P', '1C_3P', '2C_2P', '2C_3P', '3C_3P']
+        else:
+            self_class_names = cfg.DATA.CLASS_NAMES
         #self_class_names = ['1S_1C', '2S_1C', '2S_2C', '2S_3C', '3S_3C']
         self.COCO_id_to_category_id = {x + 1: x + 1 for x, _ in enumerate(self_class_names)}
 
