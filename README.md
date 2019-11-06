@@ -1,5 +1,5 @@
 # ClaRAN v0.2
-ClaRAN - Classifying Radio Galaxies Automatically with Neural Networks
+[ClaRAN - Classifying Radio Galaxies Automatically with Neural Networks](https://academic.oup.com/mnras/article/482/1/1211/5142869)
 
 # Faster R-CNN / Mask R-CNN on Radio Galaxy Zoo
 As an upgrade of the [ClaRAN v0.1](https://github.com/chenwuperth/rgz_rcnn), ClaRAN v0.2 is completely re-written based on the awesome [Tensorpack](https://github.com/tensorpack/tensorpack) project, which is likely the best-performing open source TensorFlow reimplementation of [Faster R-CNN](https://arxiv.org/abs/1506.01497) used in ClaRAN v0.1. Moreover, [Tensorpack](https://github.com/tensorpack/tensorpack) has integrated the [Feature Pyramid Networks for Object Detection](https://arxiv.org/abs/1612.03144) (FPN). It also supports instance segmentation based on [Mask R-CNN](https://arxiv.org/abs/1703.06870), although ClaRAN v0.2 currently does not support source segmentation.
