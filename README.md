@@ -61,6 +61,7 @@ python train.py --predict ./data/testD3_hg/FIRSTJ235752.4+101110_infraredct.png 
 	      TEST.RESULT_SCORE_THRESH=0.7 \
 ```
 If the DISPLAY is not set, it will produce an PNG image under the current directory:
+
 <img src="output_claran.png">
 
 On the left is the original D3 image, and the detected sources are shown on the right.
