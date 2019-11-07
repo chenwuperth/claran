@@ -60,7 +60,12 @@ python train.py --predict ./data/testD3_hg/FIRSTJ235752.4+101110_infraredct.png 
 	      TEST.RESULT_SCORE_THRESH_VIS=0.7 \
 	      TEST.RESULT_SCORE_THRESH=0.7 \
 ```
-Notice that the ``--load`` argument loads the pre-trained D3 model (470 MB) that can also be [downloaded](https://drive.google.com/open?id=1YRLu1fqdzuFR4SgdcA0dOXe_fPU1eWaD) if you want to skip the training (A couple of hours using four K80 GPUs) altogether.
+If the DISPLAY is not set, it will produce an PNG image under the current directory:
+<img src="output_claran.png">
+
+On the left is the original D3 image, and the detected sources are shown on the right.
+
+Notice that the ``--load`` argument loads the pre-trained D3 model (470 MB) that can also be [downloaded](https://drive.google.com/open?id=1YRLu1fqdzuFR4SgdcA0dOXe_fPU1eWaD) if you want to skip the training (A couple of hours using four P100 GPUs) altogether.
 
 ## Results
 
